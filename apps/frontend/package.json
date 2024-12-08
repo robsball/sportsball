@@ -23,5 +23,17 @@
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.16",
     "typescript": "^5"
+  },
+  "scripts": {
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start -p $PORT"
+  },
+  "scripts": {
+  "postinstall": "npm run build"
+  },
+  "engines": {
+  "node": ">=16.x",
+  "npm": ">=8.x"
   }
 }
