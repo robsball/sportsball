@@ -8,7 +8,7 @@ app.get("/", (req, res) => {
 });
 
 // Use the Heroku-assigned port or default to 3000 for local development
-const PORT = process.env.PORT || 4000; // Default to 4000 for local dev
+const PORT = parseInt(process.env.PORT || "4000", 10); // Parse PORT to an integer
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server is running on port ${PORT}`);
 });
