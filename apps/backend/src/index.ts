@@ -4,6 +4,15 @@ import { PrismaClient } from "@prisma/client";
 
 const app = express();
 
+// Redirect traffic from sportsball.life to www.sportsball.life
+app.use((req, res, next) => {
+  if (req.hostname === "sportsball.life") {
+    res.redirect(301, `https://www.sportsball.life${req.originalUrl}`);
+  } else {
+    next();
+  }
+});
+
 // Example root route
 app.get("/", (req, res) => {
   res.send("Backend is working!");
