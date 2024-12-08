@@ -1,0 +1,20 @@
+{
+  "name": "sportsball",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "eslint": "^9.16.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2"
+  }
+}
