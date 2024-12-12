@@ -5,19 +5,22 @@
   "scripts": {
     "dev": "ts-node src/index.ts",
     "start": "node dist/index.js",
-    "build": "tsc"
+    "build": "tsc",
+    "postinstall": "npm run build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@prisma/client": "^6.0.1",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "prisma": "^6.0.1",
-    "@prisma/client": "^6.0.1"
+    "flowbite": "^2.5.2",
+    "flowbite-react": "^0.10.2",
+    "prisma": "^6.0.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
@@ -26,11 +29,5 @@
     "npx": "^10.2.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
-  },
-  "scripts": {
-  "dev": "ts-node src/index.ts",
-  "start": "node dist/index.js",
-  "build": "tsc",
-  "postinstall": "npm run build"
-}
+  }
 }
