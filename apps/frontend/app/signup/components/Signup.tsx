@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Popover } from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
 import CountryPicker from '@/components/ui/countrypicker';
 
