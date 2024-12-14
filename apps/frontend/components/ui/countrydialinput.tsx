@@ -11,19 +11,47 @@ import { getCountries } from '@/app/utils/countries'
 const countries = getCountries();
 const US_COUNTRY = countries.find(c => c.countryCode === 'US')!;
 
-const CountryDialInput: React.FC = () => {
+interface CountryDialInputProps {
+  onChange?: (value: string) => void;
+}
+
+const CountryDialInput: React.FC<CountryDialInputProps> = ({ onChange }) => {
   const [selectedCountry, setSelectedCountry] = useState<typeof countries[0] | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
 
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPhoneNumber(value);
+    if (selectedCountry) {
+      onChange?.(value ? `${selectedCountry.dialCode}${value}` : '');
+    }
+  };
+
+  const handleCountrySelect = (country: typeof countries[0]) => {
+    setSelectedCountry(country);
+    setIsOpen(false);
+    if (phoneNumber) {
+      onChange?.(`${country.dialCode}${phoneNumber}`);
+    }
+  };
+
   useEffect(() => {
     const detectCountry = async () => {
+      const cached = localStorage.getItem('userCountry');
+      if (cached) {
+        const country = countries.find(c => c.countryCode === cached);
+        if (country) {
+          handleCountrySelect(country);
+          return;
+        }
+      }
+
       const timeoutPromise = new Promise((_, reject) => 
         setTimeout(() => reject(new Error('Timeout after 2s')), 2000)
       );
 
       try {
-        console.log('Fetching country data...');
         const response = await Promise.race([
           fetch('https://ipapi.co/json/'),
           timeoutPromise
@@ -32,18 +60,21 @@ const CountryDialInput: React.FC = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log('Country data received:', data);
         const country = countries.find(c => c.countryCode === data.country);
-        setSelectedCountry(country || US_COUNTRY);
-      } catch (error) {
-        console.error('Error detecting country:', error);
-        setSelectedCountry(US_COUNTRY);
+        if (country) {
+          localStorage.setItem('userCountry', country.countryCode);
+          handleCountrySelect(country);
+        } else {
+          handleCountrySelect(US_COUNTRY);
+        }
+      } catch {
+        handleCountrySelect(US_COUNTRY);
       }
     };
     detectCountry();
-  }, []);
+  }, []); // Only run on mount
 
-  if (!selectedCountry) return null;  // Don't render anything until we have a country
+  if (!selectedCountry) return null;
 
   return (
     <div className="relative flex items-center">
@@ -71,10 +102,7 @@ const CountryDialInput: React.FC = () => {
               {countries.map((country) => (
                 <CommandItem 
                   key={country.countryCode} 
-                  onSelect={() => {
-                    setSelectedCountry(country);
-                    setIsOpen(false);
-                  }}
+                  onSelect={() => handleCountrySelect(country)}
                 >
                   <ReactCountryFlag 
                     countryCode={country.countryCode} 
@@ -95,7 +123,7 @@ const CountryDialInput: React.FC = () => {
       <Input
         type="tel"
         value={phoneNumber}
-        onChange={(e) => setPhoneNumber(e.target.value)}
+        onChange={handlePhoneChange}
         placeholder="Phone number"
         className="h-10 rounded-l-none border-l-0"
       />
