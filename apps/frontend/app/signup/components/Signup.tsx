@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import CountryPicker from '@/components/ui/countrypicker';
+import CountryDialInput from '@/components/ui/countrydialinput';
 
 interface SignupLanding {
   onNext: () => void;
@@ -28,7 +28,7 @@ const Signup: React.FC<SignupLanding> = ({ onNext }) => {
             </div>
             <div className="mb-4">
               <label className="block mb-2 text-coolGray-800 font-medium" htmlFor="phone">Phone*</label>
-              <CountryPicker />
+              <CountryDialInput />
             </div>
             <div className="flex items-center mb-4">
               <Checkbox className="data-[state=checked]:bg-green-900 border-gray-300"/>

@@ -11,19 +11,32 @@ import { getCountries } from '@/app/utils/countries'
 const countries = getCountries();
 const US_COUNTRY = countries.find(c => c.countryCode === 'US')!;
 
-const CountryPicker: React.FC = () => {
+const CountryDialInput: React.FC = () => {
   const [selectedCountry, setSelectedCountry] = useState<typeof countries[0] | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
 
   useEffect(() => {
     const detectCountry = async () => {
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Timeout after 2s')), 2000)
+      );
+
       try {
-        const response = await fetch('https://ipapi.co/json/');
+        console.log('Fetching country data...');
+        const response = await Promise.race([
+          fetch('https://ipapi.co/json/'),
+          timeoutPromise
+        ]) as Response;
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
+        console.log('Country data received:', data);
         const country = countries.find(c => c.countryCode === data.country);
         setSelectedCountry(country || US_COUNTRY);
       } catch (error) {
+        console.error('Error detecting country:', error);
         setSelectedCountry(US_COUNTRY);
       }
     };
@@ -90,4 +103,4 @@ const CountryPicker: React.FC = () => {
   );
 };
 
-export default CountryPicker;
+export default CountryDialInput; 
